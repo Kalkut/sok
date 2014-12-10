@@ -1,0 +1,86 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Scene</title>
+	<link rel="stylesheet" href="styles/style.css"></link>
+</meta>
+</head>
+<body>
+	<script src="libs/jquery.js"></script>
+	<script src="libs/scene.js"></script>
+	<script src="libs/hero.js"></script>
+	<script src="libs/LevelEditor.js"></script>
+	<script type="text/javascript">
+		
+		
+		var hero;
+		var bob;
+		var lE = new LevelEditor({ width : 9, height : 9});
+		
+		document.body.appendChild(lE.el);
+		document.body.appendChild(lE.panel);
+
+		var generate = document.createElement("button");
+		generate.type = "button";
+		generate.innerHTML = "Generate this level";
+		generate.className = "generate";
+		document.body.appendChild(generate);
+
+		var restart = document.createElement('button');
+		restart.type = "button";
+		restart.innerHTML = "Restart the level";
+		restart.className = "restart";
+
+		var edit = document.createElement('button');
+		edit.type = "button";
+		edit.innerHTML = "Edit the level";
+		edit.className = "edit";
+
+		var levelButton = document.createElement('button');
+		levelButton.type = "button";
+		levelButton.innerHTML = "Make a new level";
+		levelButton.className = "levelButton";
+
+		var displayScene = function () {// I should write with call (or apply) a fonction that add/remove several DOMObject at a time 
+			document.body.removeChild(lE.el);
+			document.body.removeChild(lE.panel);
+			document.body.removeChild(generate);
+			document.body.appendChild(bob.el);
+			document.body.appendChild(restart);
+			document.body.appendChild(edit);
+			document.body.appendChild(levelButton);
+		}
+
+		var displayEditor = function () {
+			document.body.appendChild(lE.el);
+			document.body.appendChild(lE.panel);
+			document.body.appendChild(generate);
+			document.body.removeChild(bob.el);
+			document.body.removeChild(restart);
+			document.body.removeChild(edit);
+			document.body.removeChild(levelButton);
+		}
+
+		restart.onmouseup = function () {
+			bob.initLevel();
+		}
+
+		levelButton.onmouseup = function () {
+			lE.reset();
+			displayEditor();
+		}
+
+		edit.onmouseup = function () {
+			displayEditor();
+		}
+
+		generate.onmouseup = function () {
+			if(!hero) hero = new Hero({speed : { x : 26, y : 26}, size : 48 });
+			if(!bob) bob = new Scene({ tWidth : 49, tHeight : 49,level : lE.saveLevel(), player : hero });
+			else bob.currentLevel = lE.saveLevel();
+			displayScene();
+			bob.initLevel();
+		}
+	</script>
+</body>
+</html>
